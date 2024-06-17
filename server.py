@@ -146,4 +146,4 @@ def get_recently_added_mangas_in_mangapill():
     return jsonify(recently_added)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True, port=80)
