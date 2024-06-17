@@ -15,7 +15,8 @@ class MangaSeeAPI:
     def search_manga(self, query):
         try:
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Referer': 'https://mangasee123.com'
             }
             response = requests.get('https://mangasee123.com/_search.php', headers = headers)
             response.raise_for_status()
