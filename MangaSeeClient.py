@@ -2,6 +2,7 @@ import json
 import requests
 import cloudscraper
 from bs4 import BeautifulSoup
+import re
 
 class Mangasee123:
     def __init__(self):
@@ -68,7 +69,7 @@ class Mangasee123:
                 cur_chapter_length = int(cur_chapter['Page'])
 
                 for i in range(cur_chapter_length):
-                    chapter = self.process_chapter_for_image_url(chapter_id.replace('[^0-9.]', ''))
+                    chapter = self.process_chapter_for_image_url(re.sub('[^0-9.]', '', chapter_id))
                     page = f"{i + 1:03}"
                     manga_id = chapter_id.split('-chapter-', 1)[0]
                     image_path = f'https://{image_host}/manga/{manga_id}/{chapter}-{page}.png'
@@ -87,6 +88,19 @@ class Mangasee123:
             return pages
         except Exception as err:
             raise Exception(str(err))
+
+    def process_script_tag_variable(self, script, variable):
+        chop_front = script[script.find(variable) + len(variable):]
+        chapters = json.loads(chop_front[:chop_front.find(';')])
+        return chapters
+
+    def process_chapter_for_image_url(self, chapter):
+        if '.' not in chapter:
+            return chapter.zfill(4)
+        values = chapter.split('.')
+        pad = values[0].zfill(4)
+        return f"{pad}.{values[1]}"
+
 
     def search(self, query):
         matches = []
@@ -118,10 +132,6 @@ class Mangasee123:
         except Exception as err:
             raise Exception(str(err))
 
-    def process_script_tag_variable(self, script, variable):
-        chop_front = script[script.find(variable) + len(variable):]
-        chapters = json.loads(chop_front[:chop_front.find(';')])
-        return chapters
 
     def process_chapter_number(self, chapter):
         decimal = chapter[-1]
@@ -140,9 +150,9 @@ class Mangasee123:
         return f"{pad}.{values[1]}"
 
 # Example usage:
-# manga = Mangasee123()
-# media_info = manga.search('oyasumi')
-# manga_info = manga.fetch_manga_info(media_info['results'][0]['id'])
-# chapter_pages = manga.fetch_chapter_pages(manga_info['chapters'][0]['id'])
-# print(chapter_pages)
+manga = Mangasee123()
+media_info = manga.search('oyasumi')
+manga_info = manga.fetch_manga_info(media_info['results'][0]['id'])
+chapter_pages = manga.fetch_chapter_pages(manga_info['chapters'][0]['id'])
+print(chapter_pages)
 # print(media_info, manga_info)
