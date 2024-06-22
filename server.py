@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from AniListManager import fetch_latest_manga_data, fetch_manga_data
 from MangaSeeClient import Mangasee123
+from googletrans import Translator
 
 app = Flask(__name__)
 manga_parser = Mangasee123()
+translator = Translator()
 
 @app.route('/v1/manga/getPopularManga', methods=['GET'])
 def search_in_mangareader():
@@ -48,6 +50,22 @@ def search_manga(query):
         return jsonify(search_results)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
+@app.route('/translate', methods=['POST'])
+def translate_text():
+    data = request.json
+    text = data.get('text')
+    target_language = data.get('target_language', 'en') 
+
+    if not text:
+        return jsonify({"error": "Text to translate is required"}), 400
+    translation = translator.translate(text, dest=target_language)
+    return jsonify({
+        "original_text": text,
+        "translated_text": translation.text,
+        "target_language": target_language
+    })
 
         
 if __name__ == '__main__':
