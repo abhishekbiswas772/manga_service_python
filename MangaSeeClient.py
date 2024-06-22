@@ -71,7 +71,7 @@ class Mangasee123:
                     chapter = self.process_chapter_for_image_url(chapter_id.replace('[^0-9.]', ''))
                     page = f"{i + 1:03}"
                     manga_id = chapter_id.split('-chapter-', 1)[0]
-                    image_path = f'https://{image_host}/manga/{manga_id}/{chapter}-{page}.png'
+                    image_path = f'https://{image_host}/manga/{manga_id}/{page}.png'
 
                     images.append(image_path)
 
