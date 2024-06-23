@@ -1,7 +1,7 @@
 import requests
 from flask import jsonify
 
-def fetch_manga_data(page=1, per_page=10):
+def fetch_anime_data(page=1, per_page=10):
     url = "https://graphql.anilist.co/"
     
     query = """
@@ -14,7 +14,7 @@ def fetch_manga_data(page=1, per_page=10):
           hasNextPage
           perPage
         }
-        media(type: MANGA, sort: POPULARITY_DESC) {
+        media(type: ANIME, sort: POPULARITY_DESC, status: RELEASING) {
           id
           title {
             romaji
@@ -69,8 +69,6 @@ def fetch_manga_data(page=1, per_page=10):
         print(response.text)
         return jsonify({"error": "Request failed"}), 400
     
-
-
 
 def fetch_latest_manga_data(page=1, per_page=10):
     url = "https://graphql.anilist.co/"
@@ -85,7 +83,7 @@ def fetch_latest_manga_data(page=1, per_page=10):
           hasNextPage
           perPage
         }
-        media(type: MANGA, sort: START_DATE) {
+        media(type: ANIME, sort: START_DATE, status: RELEASING) {
           id
           title {
             romaji
@@ -139,3 +137,5 @@ def fetch_latest_manga_data(page=1, per_page=10):
         print(f"Request failed with status code {response.status_code}")
         print(response.text)
         return jsonify({"error": "Request failed"}), 400
+    
+

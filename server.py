@@ -7,7 +7,7 @@ app = Flask(__name__)
 manga_parser = Mangasee123()
 
 @app.route('/v1/manga/getPopularManga', methods=['GET'])
-def search_in_mangareader():
+def get_popular_manga():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=10, type=int)
     result = fetch_manga_data(page, per_page)
@@ -70,6 +70,23 @@ def translate_text():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/v1/anime/getPopularAnime', methods=['GET'])
+def get_popular_anime():
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    result = fetch_manga_data(page, per_page)
+    return result
+
+
+
+@app.route('/v1/anime/getLatestAnime', methods=['GET'])
+def get_latest_anime():
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    result = fetch_latest_manga_data(page, per_page)
+    return result
             
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port=80)
